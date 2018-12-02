@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class CacheObject {
 
-    private long key;
+    private String key;
     private String value;
 
     @Override
@@ -20,13 +20,13 @@ public class CacheObject {
         if (this == o) return true;
         if (!(o instanceof CacheObject)) return false;
 
-        CacheObject cacheObject = (CacheObject) o;
+        CacheObject object = (CacheObject) o;
 
-        return getKey() == cacheObject.getKey();
+        return getKey().equals(object.getKey());
     }
 
     @Override
     public int hashCode() {
-        return (int) (getKey() ^ (getKey() >>> 32));
+        return getKey().hashCode();
     }
 }

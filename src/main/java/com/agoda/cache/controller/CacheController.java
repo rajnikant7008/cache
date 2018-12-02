@@ -3,7 +3,6 @@ package com.agoda.cache.controller;
 import com.agoda.cache.model.CacheObject;
 import com.agoda.cache.service.CacheService;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.MissingNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ public class CacheController {
 
     @Autowired
     @Qualifier("customCacheServiceImpl")
-    private CacheService<Long, String> cacheService;
+    private CacheService<String, String> cacheService;
 
     @ApiOperation(value = "View status of cache server")
     @RequestMapping(value = "/ping", method = RequestMethod.GET, produces = "application/json")
@@ -46,20 +45,20 @@ public class CacheController {
 
     @ApiOperation(value = "delete element from cache")
     @RequestMapping(value = "/remove/{key}", method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity remove(@PathVariable(value = "key") Long key) {
+    public ResponseEntity remove(@PathVariable(value = "key") String key) {
         LOG.info("Removing element from cache, key: {}", key);
         return new ResponseEntity<>(JsonNodeFactory.instance.booleanNode(cacheService.remove(key)), HttpStatus.OK);
     }
 
     @ApiOperation(value = "get element from cache")
     @RequestMapping(value = "/get/{key}", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity get(@PathVariable(value = "key") Long key) {
+    public ResponseEntity get(@PathVariable(value = "key") String key) {
         LOG.info("Retrieving element from cache, key: {}    ", key);
         String response = cacheService.get(key);
         ResponseEntity responseEntity;
-        if (response == null){
-            responseEntity = new ResponseEntity<>(MissingNode.getInstance(), HttpStatus.NO_CONTENT);
-        } else{
+        if (response == null) {
+            responseEntity = new ResponseEntity<>(JsonNodeFactory.instance.nullNode(), HttpStatus.NO_CONTENT);
+        } else {
             responseEntity = new ResponseEntity<>(JsonNodeFactory.instance.textNode(response), HttpStatus.OK);
         }
         return responseEntity;
@@ -71,9 +70,9 @@ public class CacheController {
         LOG.info("Retrieving most recently added element from cache");
         String response = cacheService.peek();
         ResponseEntity responseEntity;
-        if (response == null){
-            responseEntity = new ResponseEntity<>(MissingNode.getInstance(), HttpStatus.NO_CONTENT);
-        } else{
+        if (response == null) {
+            responseEntity = new ResponseEntity<>(JsonNodeFactory.instance.nullNode(), HttpStatus.NO_CONTENT);
+        } else {
             responseEntity = new ResponseEntity<>(JsonNodeFactory.instance.textNode(response), HttpStatus.OK);
         }
         return responseEntity;
@@ -85,9 +84,9 @@ public class CacheController {
         LOG.info("Retrieving most recently added element from cache and removing it");
         String response = cacheService.take();
         ResponseEntity responseEntity;
-        if (response == null){
-            responseEntity = new ResponseEntity<>(MissingNode.getInstance(), HttpStatus.NO_CONTENT);
-        } else{
+        if (response == null) {
+            responseEntity = new ResponseEntity<>(JsonNodeFactory.instance.nullNode(), HttpStatus.NO_CONTENT);
+        } else {
             responseEntity = new ResponseEntity<>(JsonNodeFactory.instance.textNode(response), HttpStatus.OK);
         }
         return responseEntity;
