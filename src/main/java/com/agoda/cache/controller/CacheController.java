@@ -29,11 +29,6 @@ public class CacheController {
     @Qualifier("customCacheServiceImpl")
     private CacheService<String, String> cacheService;
 
-    @ApiOperation(value = "View status of cache server")
-    @RequestMapping(value = "/ping", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity ping() {
-        return new ResponseEntity<>(JsonNodeFactory.instance.textNode("Success!"), HttpStatus.OK);
-    }
 
     @ApiOperation(value = "Add element to cache")
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
